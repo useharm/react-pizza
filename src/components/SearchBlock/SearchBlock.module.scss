@@ -1,0 +1,35 @@
+.root {
+    position: relative;
+    left: -140px;
+}
+
+.input {
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    outline: none;
+    width: 300px;
+    padding-left: 35px;
+    &:focus {
+        border: 1px solid rgba(0, 0, 0, 0.6);
+    }
+}
+.icon {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    opacity: 0.3;
+    left: 5px;
+    top: 8px;
+}
+.close {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    opacity: 0.3;
+    &:hover {
+        opacity: 0.8;
+    }
+}
