@@ -21,7 +21,7 @@ const Home = () => {
     const categoriesType = useSelector(state => state.filter.categoriesType);
     const [inputValue, setInputValue] = useState('');
     const dispatch = useDispatch();
-    const [page, setPage] = useState(1);
+    const page = useSelector(state => state.filter.page);
     const searchDelay = useCallback(
       debounce((searchValue) => 
         setInputValue(searchValue)
@@ -53,7 +53,7 @@ const Home = () => {
               <PizzaBlock {...prev}/>
               </div>)}
         </div>
-        <Pagination setPage={number => setPage(number)}/>
+        <Pagination />
       </div> 
     );
 };
