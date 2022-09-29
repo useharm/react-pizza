@@ -5,8 +5,7 @@ import Categories from '../components/Categories';
 import Skeleton from '../components/Skeleton';
 import { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
-import { SearchContext } from '../App';
-import { setCategory, setSearch } from '../redux/slices/filterSlice';
+import { setCategory, setSearch, searchSelector } from '../redux/slices/filterSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPizzas } from '../redux/slices/fetchSlicer';
 import { useNavigate } from 'react-router';
@@ -14,18 +13,14 @@ import debounce from 'lodash.debounce';
 import qs from 'qs';
 
 const Home = () => {
-    const {searchValue} = React.useContext(SearchContext);
     const { items, status } = useSelector(state => state.pizza);
-    const sortType = useSelector(state => state.filter.sortType)
-    const categoriesType = useSelector(state => state.filter.categoriesType);
+    const { sortType, searchValue, page, categoriesType } = useSelector(searchSelector)
     const isSearch = useRef(false);
     const isMounted = useRef(false);
     const [inputValue, setInputValue] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const page = useSelector(state => state.filter.page);
     const getPizzas = async () => {
-        dispatch(fetchPizzas());
         dispatch(fetchPizzas({
           inputValue,
           page,
@@ -44,7 +39,6 @@ const Home = () => {
   useEffect(() => {
     if (window.location.search) {
       const searchParsed = qs.parse(window.location.search.substring(1));
-      console.log(searchParsed);
       dispatch(setSearch(searchParsed));
       isSearch.current = true;
     }

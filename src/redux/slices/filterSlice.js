@@ -5,6 +5,7 @@ const initialState = {
   categoriesType: 0,
   sortType: {name: 'популярности', sortProperty: 'rating'},
   page: 1,
+  searchValue: '',
 }
 const filterSlice = createSlice({
   name: 'filter',
@@ -23,10 +24,13 @@ const filterSlice = createSlice({
       state.categoriesType = Number(action.payload.categoryId);
       state.sortType = list.find(prev => prev.sortProperty === action.payload.sortId);
       state.page = Number(action.payload.pageId)
+    },
+    setInputValue: (state, action) => {
+      state.searchValue = action.payload;
     }
   },
 })
-
-export const { setCategory, setSort, setPage, setSearch } = filterSlice.actions;
+export const searchSelector = (state) => state.filter;
+export const { setCategory, setSort, setPage, setSearch, setInputValue } = filterSlice.actions;
 
 export default filterSlice.reducer;

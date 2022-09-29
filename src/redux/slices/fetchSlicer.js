@@ -30,15 +30,12 @@ const pizzaSlice = createSlice({
     [fetchPizzas.fulfilled]: (state, action) => {
       state.status = "success";
       state.items = action.payload;
-      console.log(state.status);
     },
-    [fetchPizzas.pending]: (state) => {   //////// NEED TO FIX
+    [fetchPizzas.pending]: (state) => {
       state.status = "loading";
-      console.log(state.status);
     },
-    [fetchPizzas.rejected]: (state) => {    ////////// NEED TO FIX (error with successful fetch)
+    [fetchPizzas.rejected]: (state) => {
       state.status = "error";
-      console.log(state.status);
     }
   }
 })
