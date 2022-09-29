@@ -6,7 +6,7 @@ const initialState = {
   sortType: {name: 'популярности', sortProperty: 'rating'},
   page: 1,
 }
-export const filterSlice = createSlice({
+const filterSlice = createSlice({
   name: 'filter',
   initialState,
   reducers: {

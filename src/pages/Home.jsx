@@ -8,32 +8,31 @@ import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
 import { setCategory, setSearch } from '../redux/slices/filterSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
+import { fetchPizzas } from '../redux/slices/fetchSlicer';
 import { useNavigate } from 'react-router';
 import debounce from 'lodash.debounce';
 import qs from 'qs';
 
 const Home = () => {
     const {searchValue} = React.useContext(SearchContext);
-    const [items, setItems] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const { items, status } = useSelector(state => state.pizza);
     const sortType = useSelector(state => state.filter.sortType)
     const categoriesType = useSelector(state => state.filter.categoriesType);
     const isSearch = useRef(false);
     const isMounted = useRef(false);
     const [inputValue, setInputValue] = useState('');
     const dispatch = useDispatch();
-    const fetchPizzas = () => {
-      axios.get(`https://6318d403f6b281877c77bfdc.mockapi.io/items?${inputValue ? ('&search=' + inputValue) : ''}&page=${page}&sortBy=${sortType.sortProperty}&order=desc&limit=4&${
-      (categoriesType > 0) ? ('category=' + categoriesType) : '' }`)
-      .then(response => {
-        setItems(response.data);
-        setIsLoading(false);
-      });
-      
-    }
     const navigate = useNavigate();
     const page = useSelector(state => state.filter.page);
+    const getPizzas = async () => {
+        dispatch(fetchPizzas());
+        dispatch(fetchPizzas({
+          inputValue,
+          page,
+          sortType: sortType.sortProperty,
+          categoriesType
+        }))
+    }
     const searchDelay = useCallback(
       debounce((searchValue) => 
         setInputValue(searchValue)
@@ -52,8 +51,7 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    setIsLoading(true);
-   if (!isSearch.current) {fetchPizzas()}
+   if (!isSearch.current) {getPizzas()}
    isSearch.current = false;
     window.scrollTo(0, 0);
   }, [categoriesType, sortType, page, inputValue])
@@ -79,9 +77,9 @@ const Home = () => {
           </div>
           <h2 className="content__title">Все пиццы</h2>
           <div className="content__items">
-            {isLoading ? [...new Array(4)].map((_, index) => <Skeleton key={index}/>) : items.map((prev) => <div key={prev.id}>
+            {(status === 'loading') ? [...new Array(4)].map((_, index) => <Skeleton key={index}/>) : (status === 'success') ? items.map((prev) => <div key={prev.id}>
               <PizzaBlock {...prev}/>
-              </div>)}
+              </div>) : <div>ERROR</div>}
         </div>
         <Pagination />
       </div> 
