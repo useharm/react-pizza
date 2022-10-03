@@ -5,13 +5,12 @@ import NotFound from './pages/NotFound';
 import { Route, Routes } from 'react-router-dom';
 import Cart from './pages/Cart';
 import React from 'react';
-import { useState } from 'react';
 
 
 
 export const SearchContext = React.createContext('');
 
-function App() {
+const App: React.FC = () => {
   
 
   return (

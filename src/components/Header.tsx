@@ -3,9 +3,10 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import logo from '../assets/img/pizza-logo.svg'
 import SearchBlock from './SearchBlock';
+import { cartSelector } from '../redux/slices/cartSlice';
 
-const Header = () => {
-  const cart = useSelector(state => state.cart)
+const Header: React.FC = () => {
+  const cart = useSelector(cartSelector);
     return (
             <div className="header">
         <div className="container">
@@ -21,7 +22,7 @@ const Header = () => {
           <SearchBlock />
           <div className="header__cart">
             <Link to='/cart' className="button button--cart">
-              <span>{cart.totalPrice} ₽</span>
+              <span>{cart.totalPrice} руб.</span>
               <div className="button__delimiter"></div>
               <svg
                 width="18"

@@ -2,11 +2,12 @@ import React from 'react';
 import ReactPaginate from 'react-paginate';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './Pagination.module.scss';
-import { setPage } from '../../redux/slices/filterSlice';
+import { setPage, searchSelector } from '../../redux/slices/filterSlice';
+import { useAppDispatch } from '../../redux/store';
 
-export const Pagination = () => {
-  const page = useSelector(state => state.filter.page);
-  const dispatch = useDispatch();
+export const Pagination: React.FC = () => {
+  const { page } = useSelector(searchSelector);
+  const dispatch = useAppDispatch();
     return (
         <ReactPaginate
         className={styles.root}
@@ -17,7 +18,6 @@ export const Pagination = () => {
         pageCount={3}
         forcePage={page - 1}
         previousLabel="<"
-        renderOnZeroPageCount={null}
       />
     );
 };

@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useRef } from 'react';
-import { useSelector, useDispatch} from 'react-redux';
-import { setSort } from '../redux/slices/filterSlice';
-export const list = [
+import { useSelector } from 'react-redux';
+import { setSort, searchTypeSelector, Sort } from '../redux/slices/filterSlice';
+import { useAppDispatch } from '../redux/store';
+type PopupWindow = MouseEvent & {
+  path: Node[]
+}
+
+export const list: Sort[] = [
   {name: 'популярности', sortProperty: 'rating'},
   {name: 'цене', sortProperty: 'price'},
   {name: 'алфавиту', sortProperty: 'name'}
 ];
 
-const Sort = () => {
-  const [visible, setVisible] = useState(false);
-  const sort = useSelector(state => state.filter.sortType);
-  const dispatch = useDispatch();
-  const sortRef = useRef();
-  function bodyClick(e) {
-    if (!e.path.includes(sortRef.current)) {
+const SortC: React.FC = () => {
+  const [visible, setVisible] = useState<boolean>(false);
+  const sort = useSelector(searchTypeSelector);
+  const dispatch = useAppDispatch();
+  const sortRef = useRef<HTMLDivElement>(null);
+  function bodyClick(e: MouseEvent) {
+    const _e = e as PopupWindow;
+    if (sortRef.current && !_e.path.includes(sortRef.current)) {
       setVisible(false);
     }
   }
-  function set(obj) {
+  function set(obj: Sort) {
     dispatch(setSort(obj));
     setVisible(false);
   }
@@ -49,7 +55,7 @@ const Sort = () => {
               </div>
               {visible ? (<div className="sort__popup">
                 <ul>
-                {list.map((prev, index) => (<li key={index} onClick={() => set(prev)} className={sort.name === prev.name ? 'active' : null}>
+                {list.map((prev, index) => (<li key={index} onClick={() => set(prev)} className={sort.name === prev.name ? 'active' : ''}>
                     {prev.name}
                 </li>))}
                 </ul>
@@ -58,4 +64,4 @@ const Sort = () => {
     );
 };
 
-export default Sort;
+export default SortC;

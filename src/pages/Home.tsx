@@ -5,20 +5,22 @@ import Categories from '../components/Categories';
 import Skeleton from '../components/Skeleton';
 import { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
-import { setCategory, setSearch, searchSelector } from '../redux/slices/filterSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchPizzas } from '../redux/slices/fetchSlicer';
+import { setCategory, setSearch, searchSelector, SetSearchType } from '../redux/slices/filterSlice';
+import { useSelector } from 'react-redux';
+import { fetchPizzas, pizzaItemsSelector } from '../redux/slices/fetchSlicer';
 import { useNavigate } from 'react-router';
 import debounce from 'lodash.debounce';
 import qs from 'qs';
+import { list } from '../components/Sort';
+import { useAppDispatch } from '../redux/store';
 
-const Home = () => {
-    const { items, status } = useSelector(state => state.pizza);
+const Home: React.FC = () => {
+    const { items, status } = useSelector(pizzaItemsSelector);
     const { sortType, searchValue, page, categoriesType } = useSelector(searchSelector)
-    const isSearch = useRef(false);
-    const isMounted = useRef(false);
-    const [inputValue, setInputValue] = useState('');
-    const dispatch = useDispatch();
+    const isSearch = useRef<boolean>(false);
+    const isMounted = useRef<boolean>(false);
+    const [inputValue, setInputValue] = useState<string>('');
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const getPizzas = async () => {
         dispatch(fetchPizzas({
@@ -39,7 +41,14 @@ const Home = () => {
   useEffect(() => {
     if (window.location.search) {
       const searchParsed = qs.parse(window.location.search.substring(1));
-      dispatch(setSearch(searchParsed));
+      const searchList = list.find(prev => prev.sortProperty === searchParsed.sortId);
+      const searched: SetSearchType = {
+        categoryId: Number(searchParsed.categoryId),
+        sortId: searchList ? searchList : list[0],
+        pageId: Number(searchParsed.pageId),
+      };
+      console.log(searched)
+      dispatch(setSearch(searched));
       isSearch.current = true;
     }
   }, [])
