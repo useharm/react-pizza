@@ -1,6 +1,5 @@
 .root {
     position: relative;
-    left: -140px;
 }
 
 .input {
@@ -29,6 +28,7 @@
     right: 10px;
     top: 12px;
     opacity: 0.3;
+    cursor: pointer;
     &:hover {
         opacity: 0.8;
     }
